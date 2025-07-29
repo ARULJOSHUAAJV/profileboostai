@@ -83,14 +83,67 @@
         return;
       }
 
-      // Simulated AI generation
       const resume = `
         <h2>Generated Resume</h2>
         <div class="resume">
+          <p><strong>Full Name:</strong> John Doe</p>
+          <p><strong>Phone:</strong> +91-9876543210</p>
+          <p><strong>Email:</strong> john.doe@example.com</p>
+          <p><strong>Location:</strong> Chennai, Tamil Nadu</p>
+          <p><strong>LinkedIn:</strong> linkedin.com/in/johndoe</p>
+          <p><strong>Website:</strong> johndoe.dev</p>
+
           <p><strong>Summary:</strong> ${input}</p>
-          <p><strong>Skills:</strong> HTML, CSS, JavaScript</p>
-          <p><strong>Experience:</strong> 2+ years of full-stack web development</p>
-          <p><strong>Projects:</strong> Portfolio Website, Business Landing Page, Responsive Blog Site</p>
+
+          <p><strong>Skills:</strong></p>
+          <ul>
+            <li><strong>Programming:</strong> Python, Java, JavaScript</li>
+            <li><strong>Tools:</strong> Figma, Adobe XD, Git, VS Code</li>
+            <li><strong>Soft Skills:</strong> Teamwork, Communication, Problem-solving</li>
+          </ul>
+
+          <p><strong>Education:</strong></p>
+          <ul>
+            <li>B.Tech in Computer Science</li>
+            <li>XYZ University, Chennai | 2021</li>
+            <li>CGPA: 8.5/10</li>
+          </ul>
+
+          <p><strong>Work Experience:</strong></p>
+          <ul>
+            <li><strong>Graphic Designer</strong><br>
+              ABC Studio | Chennai | Jan 2022 – Present<br>
+              - Designed social media graphics and posters for 30+ clients<br>
+              - Increased Instagram engagement by 40% through visual content
+            </li>
+          </ul>
+
+          <p><strong>Projects:</strong></p>
+          <ul>
+            <li><strong>AI Portfolio Builder Website</strong><br>
+              A web app using HTML, CSS, and JavaScript to generate AI-based resumes and portfolios.<br>
+              Role: UI Developer | Tools: Figma, HTML, JS
+            </li>
+          </ul>
+
+          <p><strong>Certifications:</strong></p>
+          <ul>
+            <li>Google UX Design Certificate – Coursera</li>
+            <li>Python for Everybody – University of Michigan</li>
+          </ul>
+
+          <p><strong>Internships:</strong></p>
+          <ul>
+            <li>Frontend Intern at ABC Tech | Remote | June 2021 – Aug 2021</li>
+          </ul>
+
+          <p><strong>Awards & Achievements:</strong></p>
+          <ul>
+            <li>Top 5 finalist – National Web Design Challenge 2020</li>
+          </ul>
+
+          <p><strong>Languages:</strong> English (Fluent), Tamil (Native)</p>
+          <p><strong>Hobbies:</strong> Blogging, Photography, UI Design</p>
         </div>`;
 
       const portfolio = `
