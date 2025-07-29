@@ -85,7 +85,7 @@
     <label>Portfolio / Website</label>
     <input type="text" id="portfolio" />
 
-    <label>Skills (e.g., Programming: Java, Python | Tools: Git, VSCode)</label>
+    <label>Skills</label>
     <textarea id="skills"></textarea>
 
     <label>Education</label>
@@ -121,9 +121,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace this!
-
-    let aiSummaryText = "";
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace this with your key
+    let isResumeGenerated = false;
 
     async function generateResume() {
       const name = document.getElementById("name").value;
@@ -144,7 +143,7 @@
 
       const prompt = `Create a 3-line resume summary for ${name}, located in ${location}. Experience: ${experience}. Education: ${education}. Skills: ${skills}.`;
 
-      aiSummaryText = await fetchAI(prompt);
+      const aiSummary = await fetchAI(prompt);
 
       const resumeHTML = `
         <div class="section">
@@ -157,7 +156,7 @@
 
         <div class="section">
           <h3>Resume Summary (AI-Generated)</h3>
-          <p>${aiSummaryText}</p>
+          <p>${aiSummary}</p>
         </div>
 
         <div class="section"><h3>Skills</h3><p>${skills}</p></div>
@@ -172,6 +171,8 @@
       `;
 
       document.getElementById("resume").innerHTML = resumeHTML;
+      isResumeGenerated = true;
+      alert("✅ Resume generated. Now you can download it as PDF.");
     }
 
     async function fetchAI(prompt) {
@@ -193,18 +194,26 @@
         const data = await res.json();
         return data.choices[0].text.trim();
       } catch (error) {
-        return "AI summary generation failed.";
+        return "⚠️ AI summary generation failed.";
       }
     }
 
     function downloadPDF() {
-      const element = document.getElementById("resume");
-      if (!element.innerText.trim()) {
-        alert("Please generate the resume before downloading!");
+      if (!isResumeGenerated) {
+        alert("❌ Please generate the resume first.");
         return;
       }
 
-      html2pdf().from(element).save("AI_Resume.pdf");
+      const element = document.getElementById("resume");
+      const opt = {
+        margin:       0.5,
+        filename:     'Resume_AI.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
     }
   </script>
 </body>
