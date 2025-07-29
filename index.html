@@ -1,150 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Resume Builder AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: Arial;
-      background: #f0f0f0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    label {
-      font-weight: bold;
-    }
-    button {
-      padding: 12px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #resume {
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid #333;
-      background: #fff;
-    }
-    .section {
-      margin-bottom: 20px;
-    }
+    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    input, textarea { width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    label { font-weight: bold; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    #resume { margin-top: 40px; padding: 20px; border: 1px solid #000; background: #fff; }
+    h2 { text-align: center; }
+    .section { margin-bottom: 20px; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Resume Builder AI</h1>
-
-    <!-- Form Inputs -->
-    <label>Full Name</label><input type="text" id="name" />
-    <label>Phone Number</label><input type="text" id="phone" />
-    <label>Email</label><input type="text" id="email" />
-    <label>Location (City, State)</label><input type="text" id="location" />
-    <label>LinkedIn Profile</label><input type="text" id="linkedin" />
-    <label>Portfolio / Website</label><input type="text" id="portfolio" />
-    <label>Skills</label><textarea id="skills"></textarea>
+    <label>Full Name</label><input id="name" />
+    <label>Email</label><input id="email" />
+    <label>Phone</label><input id="phone" />
+    <label>Location</label><input id="location" />
+    <label>LinkedIn</label><input id="linkedin" />
+    <label>Portfolio</label><input id="portfolio" />
     <label>Education</label><textarea id="education"></textarea>
-    <label>Work Experience</label><textarea id="experience"></textarea>
+    <label>Experience</label><textarea id="experience"></textarea>
+    <label>Skills</label><textarea id="skills"></textarea>
     <label>Projects</label><textarea id="projects"></textarea>
-    <label>Certifications & Courses</label><textarea id="certifications"></textarea>
-    <label>Internships</label><textarea id="internships"></textarea>
-    <label>Awards & Achievements</label><textarea id="awards"></textarea>
     <label>Languages</label><textarea id="languages"></textarea>
-    <label>Hobbies & Interests</label><textarea id="hobbies"></textarea>
+    <label>Hobbies</label><textarea id="hobbies"></textarea>
 
-    <button onclick="generateResume()">Generate Resume with AI</button>
-    <button onclick="downloadPDF()">Download as PDF</button>
+    <button onclick="generateResume()">Generate Resume & Download PDF</button>
 
-    <div id="resume"></div>
+    <div id="resume" style="display:none;"></div>
   </div>
 
-  <!-- PDF library -->
+  <!-- Include html2pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your OpenAI key
-
-    let resumeGenerated = false;
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace this
 
     async function generateResume() {
       const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
       const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
       const location = document.getElementById("location").value;
       const linkedin = document.getElementById("linkedin").value;
       const portfolio = document.getElementById("portfolio").value;
-      const skills = document.getElementById("skills").value;
       const education = document.getElementById("education").value;
       const experience = document.getElementById("experience").value;
+      const skills = document.getElementById("skills").value;
       const projects = document.getElementById("projects").value;
-      const certifications = document.getElementById("certifications").value;
-      const internships = document.getElementById("internships").value;
-      const awards = document.getElementById("awards").value;
       const languages = document.getElementById("languages").value;
       const hobbies = document.getElementById("hobbies").value;
 
-      const prompt = `Create a 3-line resume summary for ${name}, located in ${location}. Experience: ${experience}. Education: ${education}. Skills: ${skills}.`;
+      const summaryPrompt = `Write a 3-line resume summary for a candidate named ${name}, based in ${location}. Education: ${education}. Experience: ${experience}. Skills: ${skills}.`;
 
-      const aiSummary = await fetchAI(prompt);
+      const summary = await getAISummary(summaryPrompt);
 
-      const resumeHTML = `
-        <div class="section">
-          <h2>${name}</h2>
-          <p><strong>Phone:</strong> ${phone} | <strong>Email:</strong> ${email}<br>
-          <strong>Location:</strong> ${location} <br>
-          <strong>LinkedIn:</strong> ${linkedin}<br>
-          <strong>Portfolio:</strong> ${portfolio}</p>
-        </div>
-
-        <div class="section">
-          <h3>Resume Summary (AI-Generated)</h3>
-          <p>${aiSummary}</p>
-        </div>
-
-        <div class="section"><h3>Skills</h3><p>${skills}</p></div>
+      const htmlContent = `
+        <h2>${name}'s Resume</h2>
+        <div class="section"><strong>Email:</strong> ${email} | <strong>Phone:</strong> ${phone}</div>
+        <div class="section"><strong>Location:</strong> ${location}</div>
+        <div class="section"><strong>LinkedIn:</strong> ${linkedin} | <strong>Portfolio:</strong> ${portfolio}</div>
+        <div class="section"><h3>Summary (AI-Generated)</h3><p>${summary}</p></div>
         <div class="section"><h3>Education</h3><p>${education}</p></div>
-        <div class="section"><h3>Work Experience</h3><p>${experience}</p></div>
+        <div class="section"><h3>Experience</h3><p>${experience}</p></div>
+        <div class="section"><h3>Skills</h3><p>${skills}</p></div>
         <div class="section"><h3>Projects</h3><p>${projects}</p></div>
-        <div class="section"><h3>Certifications & Courses</h3><p>${certifications}</p></div>
-        <div class="section"><h3>Internships</h3><p>${internships}</p></div>
-        <div class="section"><h3>Awards & Achievements</h3><p>${awards}</p></div>
         <div class="section"><h3>Languages</h3><p>${languages}</p></div>
-        <div class="section"><h3>Hobbies & Interests</h3><p>${hobbies}</p></div>
+        <div class="section"><h3>Hobbies</h3><p>${hobbies}</p></div>
       `;
 
-      const resumeContainer = document.getElementById("resume");
-      resumeContainer.innerHTML = resumeHTML;
+      const resumeDiv = document.getElementById("resume");
+      resumeDiv.innerHTML = htmlContent;
+      resumeDiv.style.display = "block";
 
-      resumeGenerated = true;
-      alert("✅ Resume generated successfully. You can now download the PDF.");
+      // WAIT for DOM to update, then download PDF
+      setTimeout(() => {
+        html2pdf().set({
+          margin: 0.5,
+          filename: `${name.replace(/\s+/g, "_")}_Resume.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        }).from(resumeDiv).save();
+      }, 500);
     }
 
-    async function fetchAI(prompt) {
+    async function getAISummary(prompt) {
       try {
-        const res = await fetch("https://api.openai.com/v1/completions", {
+        const response = await fetch("https://api.openai.com/v1/completions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -152,35 +101,16 @@
           },
           body: JSON.stringify({
             model: "text-davinci-003",
-            prompt,
+            prompt: prompt,
             max_tokens: 150,
             temperature: 0.7
           })
         });
-
-        const data = await res.json();
+        const data = await response.json();
         return data.choices[0].text.trim();
-      } catch (error) {
-        return "AI summary could not be generated.";
+      } catch (err) {
+        return "AI summary not available (check API key or connection).";
       }
-    }
-
-    function downloadPDF() {
-      if (!resumeGenerated) {
-        alert("❗ Please generate the resume first.");
-        return;
-      }
-
-      const element = document.getElementById("resume");
-      const opt = {
-        margin: 0.5,
-        filename: 'Resume_AI.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save();
     }
   </script>
 </body>
