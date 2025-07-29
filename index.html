@@ -10,7 +10,6 @@
       background: #f0f0f0;
       padding: 20px;
     }
-
     .container {
       max-width: 900px;
       margin: auto;
@@ -18,11 +17,9 @@
       padding: 30px;
       border-radius: 10px;
     }
-
     h1, h2 {
       text-align: center;
     }
-
     input, textarea {
       width: 100%;
       padding: 10px;
@@ -31,11 +28,9 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-
     label {
       font-weight: bold;
     }
-
     button {
       padding: 12px 20px;
       background: #007bff;
@@ -45,18 +40,15 @@
       cursor: pointer;
       margin-right: 10px;
     }
-
     button:hover {
       background: #0056b3;
     }
-
     #resume {
       padding: 20px;
       margin-top: 20px;
       border: 1px solid #333;
       background: #fff;
     }
-
     .section {
       margin-bottom: 20px;
     }
@@ -67,50 +59,21 @@
     <h1>Resume Builder AI</h1>
 
     <!-- Form Inputs -->
-    <label>Full Name</label>
-    <input type="text" id="name" />
-
-    <label>Phone Number</label>
-    <input type="text" id="phone" />
-
-    <label>Email</label>
-    <input type="text" id="email" />
-
-    <label>Location (City, State)</label>
-    <input type="text" id="location" />
-
-    <label>LinkedIn Profile</label>
-    <input type="text" id="linkedin" />
-
-    <label>Portfolio / Website</label>
-    <input type="text" id="portfolio" />
-
-    <label>Skills</label>
-    <textarea id="skills"></textarea>
-
-    <label>Education</label>
-    <textarea id="education"></textarea>
-
-    <label>Work Experience</label>
-    <textarea id="experience"></textarea>
-
-    <label>Projects</label>
-    <textarea id="projects"></textarea>
-
-    <label>Certifications & Courses</label>
-    <textarea id="certifications"></textarea>
-
-    <label>Internships</label>
-    <textarea id="internships"></textarea>
-
-    <label>Awards & Achievements</label>
-    <textarea id="awards"></textarea>
-
-    <label>Languages</label>
-    <textarea id="languages"></textarea>
-
-    <label>Hobbies & Interests</label>
-    <textarea id="hobbies"></textarea>
+    <label>Full Name</label><input type="text" id="name" />
+    <label>Phone Number</label><input type="text" id="phone" />
+    <label>Email</label><input type="text" id="email" />
+    <label>Location (City, State)</label><input type="text" id="location" />
+    <label>LinkedIn Profile</label><input type="text" id="linkedin" />
+    <label>Portfolio / Website</label><input type="text" id="portfolio" />
+    <label>Skills</label><textarea id="skills"></textarea>
+    <label>Education</label><textarea id="education"></textarea>
+    <label>Work Experience</label><textarea id="experience"></textarea>
+    <label>Projects</label><textarea id="projects"></textarea>
+    <label>Certifications & Courses</label><textarea id="certifications"></textarea>
+    <label>Internships</label><textarea id="internships"></textarea>
+    <label>Awards & Achievements</label><textarea id="awards"></textarea>
+    <label>Languages</label><textarea id="languages"></textarea>
+    <label>Hobbies & Interests</label><textarea id="hobbies"></textarea>
 
     <button onclick="generateResume()">Generate Resume with AI</button>
     <button onclick="downloadPDF()">Download as PDF</button>
@@ -118,11 +81,13 @@
     <div id="resume"></div>
   </div>
 
+  <!-- PDF library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace this with your key
-    let isResumeGenerated = false;
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your OpenAI key
+
+    let resumeGenerated = false;
 
     async function generateResume() {
       const name = document.getElementById("name").value;
@@ -170,9 +135,11 @@
         <div class="section"><h3>Hobbies & Interests</h3><p>${hobbies}</p></div>
       `;
 
-      document.getElementById("resume").innerHTML = resumeHTML;
-      isResumeGenerated = true;
-      alert("✅ Resume generated. Now you can download it as PDF.");
+      const resumeContainer = document.getElementById("resume");
+      resumeContainer.innerHTML = resumeHTML;
+
+      resumeGenerated = true;
+      alert("✅ Resume generated successfully. You can now download the PDF.");
     }
 
     async function fetchAI(prompt) {
@@ -194,23 +161,23 @@
         const data = await res.json();
         return data.choices[0].text.trim();
       } catch (error) {
-        return "⚠️ AI summary generation failed.";
+        return "AI summary could not be generated.";
       }
     }
 
     function downloadPDF() {
-      if (!isResumeGenerated) {
-        alert("❌ Please generate the resume first.");
+      if (!resumeGenerated) {
+        alert("❗ Please generate the resume first.");
         return;
       }
 
       const element = document.getElementById("resume");
       const opt = {
-        margin:       0.5,
-        filename:     'Resume_AI.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        margin: 0.5,
+        filename: 'Resume_AI.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
 
       html2pdf().set(opt).from(element).save();
