@@ -2,161 +2,221 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Resume & Portfolio Builder</title>
+  <title>Resume Builder AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background: #4a90e2;
+      font-family: Arial;
+      background: #f0f0f0;
       padding: 20px;
-      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    h1, h2 {
       text-align: center;
     }
-    main {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-    textarea, input {
+
+    input, textarea {
       width: 100%;
-      margin-bottom: 20px;
       padding: 10px;
-      border: 1px solid #ccc;
+      margin-top: 10px;
+      margin-bottom: 20px;
       border-radius: 5px;
+      border: 1px solid #ccc;
     }
+
+    label {
+      font-weight: bold;
+    }
+
     button {
-      background: #4a90e2;
+      padding: 12px 20px;
+      background: #007bff;
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
+
     button:hover {
-      background: #357ab8;
+      background: #0056b3;
     }
-    .output {
-      margin-top: 30px;
+
+    #resume {
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid #333;
+      background: #fff;
     }
-    .output h2 {
-      border-bottom: 2px solid #4a90e2;
-      padding-bottom: 10px;
+
+    .section {
+      margin-bottom: 20px;
     }
-    .resume, .portfolio {
-      padding: 10px;
-      background: #f0f8ff;
-      margin-top: 10px;
-      border-radius: 5px;
+
+    ul {
+      padding-left: 20px;
     }
+
+    ul li {
+      margin-bottom: 6px;
+    }
+
   </style>
 </head>
 <body>
-  <header>
-    <h1>AI Resume & Portfolio Builder</h1>
-    <p>Create your resume and portfolio instantly with AI</p>
-  </header>
+  <div class="container">
+    <h1>Resume Builder AI</h1>
 
-  <main>
-    <label for="inputData">Describe your skills, experience, and goals:</label>
-    <textarea id="inputData" rows="8" placeholder="e.g., I am a web developer with 2 years of experience in HTML, CSS, and JavaScript. I built 5 websites and love responsive design."></textarea>
+    <!-- Header Info -->
+    <label>Full Name</label>
+    <input type="text" id="name" />
 
-    <button onclick="generateContent()">Build Resume & Portfolio</button>
+    <label>Phone Number</label>
+    <input type="text" id="phone" />
 
-    <div class="output" id="output"></div>
-  </main>
+    <label>Email</label>
+    <input type="text" id="email" />
+
+    <label>Location (City, State)</label>
+    <input type="text" id="location" />
+
+    <label>LinkedIn Profile</label>
+    <input type="text" id="linkedin" />
+
+    <label>Portfolio / Website</label>
+    <input type="text" id="portfolio" />
+
+    <!-- Skills -->
+    <label>Skills (e.g., Programming: Java, Python | Tools: Git, VSCode)</label>
+    <textarea id="skills"></textarea>
+
+    <!-- Education -->
+    <label>Education (e.g., B.Tech CSE, XYZ Univ, 2021, CGPA: 8.5)</label>
+    <textarea id="education"></textarea>
+
+    <!-- Work Experience -->
+    <label>Work Experience (e.g., Role, Company, Date, Achievements...)</label>
+    <textarea id="experience"></textarea>
+
+    <!-- Projects -->
+    <label>Projects (Title, Description, Technologies, Role)</label>
+    <textarea id="projects"></textarea>
+
+    <!-- Certifications -->
+    <label>Certifications & Courses</label>
+    <textarea id="certifications"></textarea>
+
+    <!-- Internships -->
+    <label>Internships</label>
+    <textarea id="internships"></textarea>
+
+    <!-- Awards -->
+    <label>Awards & Achievements</label>
+    <textarea id="awards"></textarea>
+
+    <!-- Languages -->
+    <label>Languages Known (e.g., English – Fluent, Tamil – Native)</label>
+    <textarea id="languages"></textarea>
+
+    <!-- Hobbies -->
+    <label>Hobbies & Interests</label>
+    <textarea id="hobbies"></textarea>
+
+    <button onclick="generateResume()">Generate Resume with AI</button>
+    <button onclick="downloadPDF()">Download as PDF</button>
+
+    <div id="resume"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    function generateContent() {
-      const input = document.getElementById("inputData").value;
-      const outputDiv = document.getElementById("output");
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your actual key
 
-      if (!input.trim()) {
-        outputDiv.innerHTML = '<p style="color:red;">Please enter your description above.</p>';
-        return;
+    async function generateResume() {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      const location = document.getElementById("location").value;
+      const linkedin = document.getElementById("linkedin").value;
+      const portfolio = document.getElementById("portfolio").value;
+      const skills = document.getElementById("skills").value;
+      const education = document.getElementById("education").value;
+      const experience = document.getElementById("experience").value;
+      const projects = document.getElementById("projects").value;
+      const certifications = document.getElementById("certifications").value;
+      const internships = document.getElementById("internships").value;
+      const awards = document.getElementById("awards").value;
+      const languages = document.getElementById("languages").value;
+      const hobbies = document.getElementById("hobbies").value;
+
+      // AI summary
+      const prompt = `Generate a 3-line professional resume summary for ${name}, based in ${location}. Skills: ${skills}. Experience: ${experience}. Education: ${education}.`;
+
+      const summary = await fetchAI(prompt);
+
+      // Resume Output
+      const html = `
+        <div class="section">
+          <h2>${name}</h2>
+          <p><strong>Phone:</strong> ${phone} | <strong>Email:</strong> ${email}<br>
+          <strong>Location:</strong> ${location} <br>
+          <strong>LinkedIn:</strong> ${linkedin}<br>
+          <strong>Portfolio:</strong> ${portfolio}</p>
+        </div>
+
+        <div class="section">
+          <h3>Resume Summary (AI-Generated)</h3>
+          <p>${summary}</p>
+        </div>
+
+        <div class="section"><h3>Skills</h3><p>${skills}</p></div>
+        <div class="section"><h3>Education</h3><p>${education}</p></div>
+        <div class="section"><h3>Work Experience</h3><p>${experience}</p></div>
+        <div class="section"><h3>Projects</h3><p>${projects}</p></div>
+        <div class="section"><h3>Certifications & Courses</h3><p>${certifications}</p></div>
+        <div class="section"><h3>Internships</h3><p>${internships}</p></div>
+        <div class="section"><h3>Awards & Achievements</h3><p>${awards}</p></div>
+        <div class="section"><h3>Languages</h3><p>${languages}</p></div>
+        <div class="section"><h3>Hobbies & Interests</h3><p>${hobbies}</p></div>
+      `;
+
+      document.getElementById("resume").innerHTML = html;
+    }
+
+    async function fetchAI(prompt) {
+      try {
+        const res = await fetch("https://api.openai.com/v1/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "text-davinci-003",
+            prompt,
+            max_tokens: 150,
+            temperature: 0.6
+          })
+        });
+
+        const data = await res.json();
+        return data.choices[0].text.trim();
+      } catch (err) {
+        return "AI Summary generation failed.";
       }
+    }
 
-      const resume = `
-        <h2>Generated Resume</h2>
-        <div class="resume">
-          <p><strong>Full Name:</strong> John Doe</p>
-          <p><strong>Phone:</strong> +91-9876543210</p>
-          <p><strong>Email:</strong> john.doe@example.com</p>
-          <p><strong>Location:</strong> Chennai, Tamil Nadu</p>
-          <p><strong>LinkedIn:</strong> linkedin.com/in/johndoe</p>
-          <p><strong>Website:</strong> johndoe.dev</p>
-
-          <p><strong>Summary:</strong> ${input}</p>
-
-          <p><strong>Skills:</strong></p>
-          <ul>
-            <li><strong>Programming:</strong> Python, Java, JavaScript</li>
-            <li><strong>Tools:</strong> Figma, Adobe XD, Git, VS Code</li>
-            <li><strong>Soft Skills:</strong> Teamwork, Communication, Problem-solving</li>
-          </ul>
-
-          <p><strong>Education:</strong></p>
-          <ul>
-            <li>B.Tech in Computer Science</li>
-            <li>XYZ University, Chennai | 2021</li>
-            <li>CGPA: 8.5/10</li>
-          </ul>
-
-          <p><strong>Work Experience:</strong></p>
-          <ul>
-            <li><strong>Graphic Designer</strong><br>
-              ABC Studio | Chennai | Jan 2022 – Present<br>
-              - Designed social media graphics and posters for 30+ clients<br>
-              - Increased Instagram engagement by 40% through visual content
-            </li>
-          </ul>
-
-          <p><strong>Projects:</strong></p>
-          <ul>
-            <li><strong>AI Portfolio Builder Website</strong><br>
-              A web app using HTML, CSS, and JavaScript to generate AI-based resumes and portfolios.<br>
-              Role: UI Developer | Tools: Figma, HTML, JS
-            </li>
-          </ul>
-
-          <p><strong>Certifications:</strong></p>
-          <ul>
-            <li>Google UX Design Certificate – Coursera</li>
-            <li>Python for Everybody – University of Michigan</li>
-          </ul>
-
-          <p><strong>Internships:</strong></p>
-          <ul>
-            <li>Frontend Intern at ABC Tech | Remote | June 2021 – Aug 2021</li>
-          </ul>
-
-          <p><strong>Awards & Achievements:</strong></p>
-          <ul>
-            <li>Top 5 finalist – National Web Design Challenge 2020</li>
-          </ul>
-
-          <p><strong>Languages:</strong> English (Fluent), Tamil (Native)</p>
-          <p><strong>Hobbies:</strong> Blogging, Photography, UI Design</p>
-        </div>`;
-
-      const portfolio = `
-        <h2>Generated Portfolio</h2>
-        <div class="portfolio">
-          <ul>
-            <li><strong>Portfolio Website:</strong> A personal website showcasing skills and resume.</li>
-            <li><strong>Landing Page:</strong> A sleek business homepage designed for conversion.</li>
-            <li><strong>Blog Site:</strong> A responsive, mobile-first blog with animations.</li>
-          </ul>
-        </div>`;
-
-      outputDiv.innerHTML = resume + portfolio;
+    function downloadPDF() {
+      const element = document.getElementById("resume");
+      html2pdf().from(element).save("Resume_AI.pdf");
     }
   </script>
 </body>
