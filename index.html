@@ -43,6 +43,7 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      margin-right: 10px;
     }
 
     button:hover {
@@ -59,22 +60,13 @@
     .section {
       margin-bottom: 20px;
     }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    ul li {
-      margin-bottom: 6px;
-    }
-
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Resume Builder AI</h1>
 
-    <!-- Header Info -->
+    <!-- Form Inputs -->
     <label>Full Name</label>
     <input type="text" id="name" />
 
@@ -93,39 +85,30 @@
     <label>Portfolio / Website</label>
     <input type="text" id="portfolio" />
 
-    <!-- Skills -->
     <label>Skills (e.g., Programming: Java, Python | Tools: Git, VSCode)</label>
     <textarea id="skills"></textarea>
 
-    <!-- Education -->
-    <label>Education (e.g., B.Tech CSE, XYZ Univ, 2021, CGPA: 8.5)</label>
+    <label>Education</label>
     <textarea id="education"></textarea>
 
-    <!-- Work Experience -->
-    <label>Work Experience (e.g., Role, Company, Date, Achievements...)</label>
+    <label>Work Experience</label>
     <textarea id="experience"></textarea>
 
-    <!-- Projects -->
-    <label>Projects (Title, Description, Technologies, Role)</label>
+    <label>Projects</label>
     <textarea id="projects"></textarea>
 
-    <!-- Certifications -->
     <label>Certifications & Courses</label>
     <textarea id="certifications"></textarea>
 
-    <!-- Internships -->
     <label>Internships</label>
     <textarea id="internships"></textarea>
 
-    <!-- Awards -->
     <label>Awards & Achievements</label>
     <textarea id="awards"></textarea>
 
-    <!-- Languages -->
-    <label>Languages Known (e.g., English – Fluent, Tamil – Native)</label>
+    <label>Languages</label>
     <textarea id="languages"></textarea>
 
-    <!-- Hobbies -->
     <label>Hobbies & Interests</label>
     <textarea id="hobbies"></textarea>
 
@@ -138,7 +121,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your actual key
+    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace this!
+
+    let aiSummaryText = "";
 
     async function generateResume() {
       const name = document.getElementById("name").value;
@@ -157,13 +142,11 @@
       const languages = document.getElementById("languages").value;
       const hobbies = document.getElementById("hobbies").value;
 
-      // AI summary
-      const prompt = `Generate a 3-line professional resume summary for ${name}, based in ${location}. Skills: ${skills}. Experience: ${experience}. Education: ${education}.`;
+      const prompt = `Create a 3-line resume summary for ${name}, located in ${location}. Experience: ${experience}. Education: ${education}. Skills: ${skills}.`;
 
-      const summary = await fetchAI(prompt);
+      aiSummaryText = await fetchAI(prompt);
 
-      // Resume Output
-      const html = `
+      const resumeHTML = `
         <div class="section">
           <h2>${name}</h2>
           <p><strong>Phone:</strong> ${phone} | <strong>Email:</strong> ${email}<br>
@@ -174,7 +157,7 @@
 
         <div class="section">
           <h3>Resume Summary (AI-Generated)</h3>
-          <p>${summary}</p>
+          <p>${aiSummaryText}</p>
         </div>
 
         <div class="section"><h3>Skills</h3><p>${skills}</p></div>
@@ -188,7 +171,7 @@
         <div class="section"><h3>Hobbies & Interests</h3><p>${hobbies}</p></div>
       `;
 
-      document.getElementById("resume").innerHTML = html;
+      document.getElementById("resume").innerHTML = resumeHTML;
     }
 
     async function fetchAI(prompt) {
@@ -203,20 +186,25 @@
             model: "text-davinci-003",
             prompt,
             max_tokens: 150,
-            temperature: 0.6
+            temperature: 0.7
           })
         });
 
         const data = await res.json();
         return data.choices[0].text.trim();
-      } catch (err) {
-        return "AI Summary generation failed.";
+      } catch (error) {
+        return "AI summary generation failed.";
       }
     }
 
     function downloadPDF() {
       const element = document.getElementById("resume");
-      html2pdf().from(element).save("Resume_AI.pdf");
+      if (!element.innerText.trim()) {
+        alert("Please generate the resume before downloading!");
+        return;
+      }
+
+      html2pdf().from(element).save("AI_Resume.pdf");
     }
   </script>
 </body>
