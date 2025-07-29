@@ -2,180 +2,169 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Neat Resume Builder AI</title>
+  <title>Complete Resume Builder AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f4f4;
-      padding: 30px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
     }
     .container {
-      max-width: 850px;
+      max-width: 900px;
       margin: auto;
       background: #fff;
-      padding: 25px;
-      border-radius: 8px;
+      padding: 30px;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     label {
-      font-weight: bold;
       display: block;
-      margin-top: 15px;
+      margin-top: 10px;
+      font-weight: bold;
     }
     input, textarea {
       width: 100%;
       padding: 10px;
-      border-radius: 5px;
+      margin-top: 5px;
       border: 1px solid #ccc;
-      margin-bottom: 15px;
+      border-radius: 5px;
     }
     button {
+      margin-top: 20px;
       padding: 10px 20px;
-      background: #007bff;
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #0056b3;
     }
     #resume {
-      display: block !important;
-      padding: 40px;
-      font-size: 15px;
-      line-height: 1.6;
-      background: #fff;
       margin-top: 40px;
+      padding: 30px;
+      background: #fff;
+      border: 1px solid #ccc;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .header h1 {
-      margin-bottom: 5px;
-      font-size: 24px;
-    }
-    .header p {
-      margin: 2px 0;
-      font-size: 14px;
-    }
-    .section {
+    .header, .section {
       margin-bottom: 20px;
     }
-    .section h3 {
-      border-bottom: 1px solid #ddd;
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .section h2 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      border-bottom: 1px solid #ccc;
       padding-bottom: 5px;
-      margin-bottom: 8px;
-      font-size: 18px;
+    }
+    .section p {
+      margin: 0 0 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>AI Resume Builder</h1>
-    <!-- Form inputs -->
-    <label>Full Name</label><input id="name" />
-    <label>Email</label><input id="email" />
-    <label>Phone</label><input id="phone" />
-    <label>Location</label><input id="location" />
-    <label>LinkedIn</label><input id="linkedin" />
-    <label>Portfolio</label><input id="portfolio" />
-    <label>Education</label><textarea id="education"></textarea>
-    <label>Experience</label><textarea id="experience"></textarea>
-    <label>Skills</label><textarea id="skills"></textarea>
-    <label>Projects</label><textarea id="projects"></textarea>
-    <label>Certifications</label><textarea id="certifications"></textarea>
-    <label>Internships</label><textarea id="internships"></textarea>
-    <label>Awards</label><textarea id="awards"></textarea>
-    <label>Languages</label><textarea id="languages"></textarea>
-    <label>Hobbies</label><textarea id="hobbies"></textarea>
-    
-    <button onclick="generateResume()">Generate Resume & Download PDF</button>
+<div class="container">
+  <h1>Resume Builder AI</h1>
+  <label>Full Name</label><input id="name">
+  <label>Email</label><input id="email">
+  <label>Phone</label><input id="phone">
+  <label>Location</label><input id="location">
+  <label>LinkedIn</label><input id="linkedin">
+  <label>Portfolio</label><input id="portfolio">
+  <label>Education</label><textarea id="education"></textarea>
+  <label>Experience</label><textarea id="experience"></textarea>
+  <label>Skills</label><textarea id="skills"></textarea>
+  <label>Projects</label><textarea id="projects"></textarea>
+  <label>Certifications</label><textarea id="certifications"></textarea>
+  <label>Internships</label><textarea id="internships"></textarea>
+  <label>Awards</label><textarea id="awards"></textarea>
+  <label>Languages</label><textarea id="languages"></textarea>
+  <label>Hobbies</label><textarea id="hobbies"></textarea>
+  <button onclick="generateResume()">Generate & Download PDF</button>
 
-    <!-- Resume Preview -->
-    <div id="resume"></div>
-  </div>
+  <div id="resume"></div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script>
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your OpenAI key
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace with your actual key
 
-    async function generateResume() {
-      const data = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        location: document.getElementById("location").value,
-        linkedin: document.getElementById("linkedin").value,
-        portfolio: document.getElementById("portfolio").value,
-        education: document.getElementById("education").value,
-        experience: document.getElementById("experience").value,
-        skills: document.getElementById("skills").value,
-        projects: document.getElementById("projects").value,
-        certifications: document.getElementById("certifications").value,
-        internships: document.getElementById("internships").value,
-        awards: document.getElementById("awards").value,
-        languages: document.getElementById("languages").value,
-        hobbies: document.getElementById("hobbies").value
-      };
+  async function generateResume() {
+    const data = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      phone: document.getElementById("phone").value,
+      location: document.getElementById("location").value,
+      linkedin: document.getElementById("linkedin").value,
+      portfolio: document.getElementById("portfolio").value,
+      education: document.getElementById("education").value,
+      experience: document.getElementById("experience").value,
+      skills: document.getElementById("skills").value,
+      projects: document.getElementById("projects").value,
+      certifications: document.getElementById("certifications").value,
+      internships: document.getElementById("internships").value,
+      awards: document.getElementById("awards").value,
+      languages: document.getElementById("languages").value,
+      hobbies: document.getElementById("hobbies").value
+    };
 
-      const prompt = `Write a professional 3-line resume summary for ${data.name}, based in ${data.location}. Education: ${data.education}. Experience: ${data.experience}. Skills: ${data.skills}`;
-      const summary = await getAISummary(prompt);
+    const summaryPrompt = `Write a 3-line resume summary for ${data.name}, based in ${data.location}, with education: ${data.education}, experience: ${data.experience}, and skills: ${data.skills}`;
+    const summary = await getAISummary(summaryPrompt);
 
-      const resumeDiv = document.getElementById("resume");
-      resumeDiv.innerHTML = `
-        <div class="header">
-          <h1>${data.name}</h1>
-          <p>${data.email} | ${data.phone} | ${data.location}</p>
-          <p>LinkedIn: ${data.linkedin} | Portfolio: ${data.portfolio}</p>
-        </div>
-        <div class="section"><h3>Professional Summary</h3><p>${summary}</p></div>
-        <div class="section"><h3>Education</h3><p>${data.education}</p></div>
-        <div class="section"><h3>Experience</h3><p>${data.experience}</p></div>
-        <div class="section"><h3>Skills</h3><p>${data.skills}</p></div>
-        <div class="section"><h3>Projects</h3><p>${data.projects}</p></div>
-        <div class="section"><h3>Certifications</h3><p>${data.certifications}</p></div>
-        <div class="section"><h3>Internships</h3><p>${data.internships}</p></div>
-        <div class="section"><h3>Awards & Achievements</h3><p>${data.awards}</p></div>
-        <div class="section"><h3>Languages</h3><p>${data.languages}</p></div>
-        <div class="section"><h3>Hobbies & Interests</h3><p>${data.hobbies}</p></div>
-      `;
+    const resumeHTML = `
+      <div class="header">
+        <h1>${data.name}</h1>
+        <p>${data.email} | ${data.phone} | ${data.location}</p>
+        <p>LinkedIn: ${data.linkedin} | Portfolio: ${data.portfolio}</p>
+      </div>
+      <div class="section"><h2>Summary</h2><p>${summary}</p></div>
+      <div class="section"><h2>Education</h2><p>${data.education}</p></div>
+      <div class="section"><h2>Experience</h2><p>${data.experience}</p></div>
+      <div class="section"><h2>Skills</h2><p>${data.skills}</p></div>
+      <div class="section"><h2>Projects</h2><p>${data.projects}</p></div>
+      <div class="section"><h2>Certifications</h2><p>${data.certifications}</p></div>
+      <div class="section"><h2>Internships</h2><p>${data.internships}</p></div>
+      <div class="section"><h2>Awards</h2><p>${data.awards}</p></div>
+      <div class="section"><h2>Languages</h2><p>${data.languages}</p></div>
+      <div class="section"><h2>Hobbies</h2><p>${data.hobbies}</p></div>
+    `;
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+    const resumeDiv = document.getElementById("resume");
+    resumeDiv.innerHTML = resumeHTML;
 
-      html2pdf().set({
-        margin: 0.5,
-        filename: `${data.name.replace(/\s+/g, '_')}_Resume.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      }).from(resumeDiv).save();
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    html2pdf().set({
+      margin: 0.5,
+      filename: `${data.name.replace(/\s+/g, '_')}_Resume.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).from(resumeDiv).save();
+  }
+
+  async function getAISummary(prompt) {
+    try {
+      const res = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "text-davinci-003",
+          prompt,
+          max_tokens: 150,
+          temperature: 0.7
+        })
+      });
+      const data = await res.json();
+      return data.choices[0].text.trim();
+    } catch (err) {
+      return "[AI Summary could not be generated]";
     }
-
-    async function getAISummary(prompt) {
-      try {
-        const res = await fetch("https://api.openai.com/v1/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt,
-            max_tokens: 150,
-            temperature: 0.7
-          })
-        });
-        const data = await res.json();
-        return data.choices[0].text.trim();
-      } catch (e) {
-        return "[Error: AI summary could not be generated]";
-      }
-    }
-  </script>
+  }
+</script>
 </body>
 </html>
